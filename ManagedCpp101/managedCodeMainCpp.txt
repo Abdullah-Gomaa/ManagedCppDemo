@@ -1,0 +1,96 @@
+#using <mscorlib.dll>
+#include "ManagedTester.h"
+
+using namespace System;
+
+int main() {
+	
+	Console::WriteLine("We are C++ .NET (C++/CLI) ready!!");
+
+    ManagedTester^ tester = gcnew ManagedTester();
+
+    // 1) Primitive types
+    int intResult = tester->ProcessInt(10);
+    System::Console::WriteLine("ProcessInt(10) = {0}", intResult);
+
+    double doubleResult = tester->ProcessDouble(8.0);
+    System::Console::WriteLine("ProcessDouble(8.0) = {0}", doubleResult);
+
+    bool toggled = tester->ToggleStatus(true);
+    System::Console::WriteLine("ToggleStatus(true) = {0}", toggled);
+
+    System::Console::WriteLine();
+
+    // 2) Strings
+    System::String^ echoed = tester->EchoString("Hello from managed code");
+    System::Console::WriteLine("EchoString = {0}", echoed);
+
+    System::String^ version = tester->GetVersionString();
+    System::Console::WriteLine("GetVersionString = {0}", version);
+
+    System::Console::WriteLine();
+
+    // 3) Pointer / reference style methods
+    int a = 5;
+    System::Console::WriteLine("Before ModifyInPlace: {0}", a);
+    tester->ModifyInPlace(a);
+    System::Console::WriteLine("After ModifyInPlace:  {0}", a);
+
+    int b = 20;
+    System::Console::WriteLine("Before Increment: {0}", b);
+    tester->Increment(b);
+    System::Console::WriteLine("After Increment:  {0}", b);
+
+    int managedInt = tester->CreateManagedInt(123);
+    System::Console::WriteLine("CreateManagedInt(123) = {0}", managedInt);
+
+    System::Console::WriteLine();
+
+    // 4) Reverse vector
+    array<int>^ numbers = gcnew array<int>{ 1, 2, 3, 4, 5 };
+    array<int>^ reversed = tester->ReverseVector(numbers);
+
+    System::Console::Write("ReverseVector = ");
+    for each (int n in reversed)
+    {
+        System::Console::Write("{0} ", n);
+    }
+    System::Console::WriteLine();
+    System::Console::WriteLine();
+
+    // 5) Count occurrences
+    array<System::String^>^ words = gcnew array<System::String^>
+    {
+        "apple", "banana", "apple", "orange", "banana", "apple"
+    };
+
+    System::Collections::Generic::Dictionary<System::String^, int>^ counts =
+        tester->CountOccurrences(words);
+
+    System::Console::WriteLine("CountOccurrences:");
+    for each (System::Collections::Generic::KeyValuePair<System::String^, int> kv in counts)
+    {
+        System::Console::WriteLine("  {0} -> {1}", kv.Key, kv.Value);
+    }
+
+    System::Console::WriteLine();
+
+    // 6) Complex transaction
+    array<double>^ weights = gcnew array<double>{ 1.5, 2.25, 3.75 };
+    System::Tuple<bool, System::String^>^ txResult =
+        tester->ComplexTransaction(42, weights, "SampleTag");
+
+    System::Console::WriteLine("ComplexTransaction success = {0}", txResult->Item1);
+    System::Console::WriteLine("ComplexTransaction message = {0}", txResult->Item2);
+
+    System::Console::WriteLine();
+    System::Console::WriteLine("Press Enter to exit...");
+    System::Console::ReadLine();
+
+    return 0;
+
+	if (!System::Diagnostics::Debugger::IsAttached)  //Prevent auto-close when running from IDE
+		Console::Read();
+
+	return 0;
+}
